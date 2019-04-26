@@ -5,7 +5,7 @@ app.use(express.static('src'));
 app.use(express.static('../auction-contract/build/contracts'));
 
 app.get('/', function (req, res) {
-  res.render('index.html');
+  res.render('index1.html');
 });
 
 app.listen(3000, function () {
