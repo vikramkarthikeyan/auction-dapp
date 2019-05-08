@@ -35,8 +35,14 @@
 		<h2 class="subs-title text-center">Bid on artist Banksy's "Girl with Balloon" painting</h2>
 
         <label class="subs-title text-center" style="font-size:20px; text-align:center; display:block">
-            <b>How much do you want to bid? (In Ethers)</b>&nbsp;
+            <b>Enter blinded bid bytes value</b>&nbsp;
               <input type="text" class="bid-input" id="bet-value" style="color:black; font-size:15px"></input>
+            <br/>
+            <br>
+        </label>
+          <label class="subs-title text-center" style="font-size:20px; text-align:center; display:block">
+            <b>Enter the value you want to send as the deposit</b>&nbsp;
+              <input type="text" class="bid-input" id="message-value" style="color:black; font-size:15px"></input>
             <br/>
         </label>
 
@@ -46,6 +52,34 @@
       	</div>
 		
 		<br><hr>
+
+
+     <label class="subs-title text-center" style="font-size:20px; text-align:center; display:block">
+            <b>Reveal your bid</b>&nbsp;
+              <input type="text" class="bid-input" id="bet-reveal" style="color:black; font-size:15px"></input>
+              <br>
+              <br>
+            <b>Enter the cryptographic secret</b>&nbsp;
+              <input type="text" class="bid-input" id="password" style="color:black; font-size:15px"></input>
+            <br/>
+        </label>
+
+    <div class="row" style="padding-top:25px">
+          <center><button type="submit" id="submit-reveal" class="btn btn-primary align-center">Reveal</button></center>
+          <br>
+        </div>
+    
+    <br><hr>
+
+
+
+
+
+
+
+
+
+
 
         <div id="info-section" data-wow-delay=".3s" style="font-size:20px; text-align:center; display:block">
 			Phase: <span id="current-phase">Bidding</span>

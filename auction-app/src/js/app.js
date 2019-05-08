@@ -43,6 +43,8 @@ App = {
     $(document).on('click', '#submit-bid', App.handleBid);
     $(document).on('click', '#change-phase', App.handlePhase);
     $(document).on('click', '#generate-winner', App.handleWinner);
+    $(document).on('click', '#submit-reveal', App.handleReveal);
+
     //$(document).on('click', '#register', function(){ var ad = $('#enter_address').val(); App.handleRegister(ad); });
   },
 
@@ -77,16 +79,25 @@ App = {
 
     var bidInstance;
     var nextState;
+    var nextStateText;
     var currentPhase = $("#current-phase").text();
-    console.log(currentPhase);
     if(currentPhase == "Bidding")
     {
-      nextState = 3;
+      nextState = 2;
+      nextStateText = "Reveal";
     }
-    if(currentPhase == "Done")
+    else if(currentPhase == "Reveal")
+    {
+      nextState = 3;
+      nextStateText = "Done";
+
+    }
+     else if(currentPhase == "Done")
     {
       nextState = 1;
+      nextStateText = "Bidding";
     }
+
     App.contracts.vote.deployed().then(function(instance) {
       bidInstance = instance;
       return bidInstance.changeState(nextState);
@@ -95,7 +106,7 @@ App = {
             if(parseInt(result.receipt.status) == 1)
             {
               alert("State has been changed")
-              $("#current-phase").text("Done");
+              $("#current-phase").text(nextStateText);
             }
             
             else
@@ -110,19 +121,19 @@ App = {
     console.log("button clicked");
     event.preventDefault();
     var bidValue = $("#bet-value").val();
-    console.log(web3.fromAscii(bidValue));
+    var msgValue = $("#message-value").val();
     web3.eth.getAccounts(function(error, accounts) {
       var account = accounts[0];
 
       App.contracts.vote.deployed().then(function(instance) {
         bidInstance = instance;
 
-        return bidInstance.bid(web3.fromAscii(bidValue));
+        return bidInstance.bid(bidValue,{value:web3.toWei(msgValue, "ether")});
       }).then(function(result, err){
             if(result){
                 console.log(result.receipt.status);
                 if(parseInt(result.receipt.status) == 1)
-                alert(account + " Your bid has been placed")
+                alert(account + "Your bid has been placed")
                 else
                 alert(account + "Bidding reverted")
             } else {
@@ -131,6 +142,37 @@ App = {
         });
     });
   },
+
+    handleReveal: function() {
+    console.log("button clicked");
+    event.preventDefault();
+    var bidRevealValue = $("#bet-reveal").val();
+    console.log(parseInt(bidRevealValue));
+    var bidRevealSecret = $("#password").val();
+    web3.eth.getAccounts(function(error, accounts) {
+      var account = accounts[0];
+
+      App.contracts.vote.deployed().then(function(instance) {
+        bidInstance = instance;
+
+        return bidInstance.reveal(parseInt(bidRevealValue),bidRevealSecret);
+      }).then(function(result, err){
+            if(result){
+                console.log(result.receipt.status);
+                if(parseInt(result.receipt.status) == 1)
+                alert(account + "Congratulations your bid has been revealed")
+                else
+                alert(account + "Bidding reverted")
+            } else {
+                alert(account + "Bidding failed")
+            }   
+        });
+    });
+  },
+
+
+
+
 
   handleWinner : function() {
     console.log("To get winner");
@@ -149,11 +191,6 @@ App = {
   }
 };
 
-
-
-
-
-      
 
 $(function() {
   $(window).load(function() {
