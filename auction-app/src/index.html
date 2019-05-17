@@ -25,21 +25,23 @@
       </div><br><hr style="width:500px"><br>
 
       <div class="row" style="padding-top:20px">
+
         <div class="col-lg-2 col-lg-offset-2 text-center">
             <img src="img/antiqueTrophy.jpg" class="rounded" height="400px" width="280px">
         </div>
+        
         <div class="col-lg-6 col-lg-offset-1">
-          <!-- <br><br> -->
+
           <h2 class="subs-title text-center">Bid on this antique trophy!</h2>
           <label class="subs-title text-center" style="font-size:20px; text-align:center; display:block">
-              <b>Enter blinded bid in Bytes: </b>&nbsp;
+              <b>Enter blinded bid in bytes: </b>&nbsp;
                 <input type="text" class="bid-input" id="bet-value" style="color:black; font-size:15px"></input>
               <br/>
               <br>
           </label>
 
           <label class="subs-title text-center" style="font-size:20px; text-align:center; display:block">
-              <b>Enter Deposit Amount: </b>&nbsp;
+              <b>Enter deposit amount: </b>&nbsp;
                 <input type="text" class="bid-input" id="message-value" style="color:black; font-size:15px"></input>
               <br/>
           </label>
@@ -48,42 +50,44 @@
            
           <hr style="width:200px">
 
-          <div id="info-section" class="row" style="font-size:20px; text-align:center; display:block">
-              Current phase: <span id="current-phase">Bidding</span>
+          <label class="subs-title text-center" style="font-size:20px; text-align:center; display:block">
+              <b>Reveal your bid:</b>&nbsp;
+                <input type="text" class="bid-input" id="bet-reveal" style="color:black; font-size:15px"></input>
+                &nbsp; <br><br>
+              <b>Enter the cryptographic secret:</b>&nbsp;
+                <input type="text" class="bid-input" id="password" style="color:black; font-size:15px"></input>
+              <br/>
+          </label>
+  
+          <div class="row" style="padding-top:20px"> 
+                <center><button type="submit" id="submit-reveal" class="btn btn-primary align-center">Reveal</button></center>
+                <br>
           </div>
-          <br>
-          <center><button type="submit" id="change-phase" class="btn btn-primary align-center">Move to Next Phase</button>&nbsp;&nbsp;
-            <button type="submit" id="generate-winner" class="btn btn-primary align-center">Show Winning bid</button>
-            </center>
+
+          
         </div>
 
       </div>
 
 		<br><hr>
 
-
-     <label class="subs-title text-center" style="font-size:20px; text-align:center; display:block">
-            <b>Reveal your bid:</b>&nbsp;
-              <input type="text" class="bid-input" id="bet-reveal" style="color:black; font-size:15px"></input>
-              &nbsp;
-            <b>Enter the cryptographic secret:</b>&nbsp;
-              <input type="text" class="bid-input" id="password" style="color:black; font-size:15px"></input>
-            <br/>
-        </label>
-
     <div class="row" style="padding-top:20px">
-          <center><button type="submit" id="submit-reveal" class="btn btn-primary align-center">Reveal</button></center>
-          <br>
+        <div id="info-section" class="row" style="font-size:20px; text-align:center; display:block">
+            Current phase: <span id="current-phase">Bidding</span>
         </div>
-
-      </div>
-      <br><br>
-
-
-      <h2 class="subs-title text-center" id="please-wait" hidden>Please wait for the transaction to be mined and executed!</h2>
+        <br>
+        <center><button type="submit" id="change-phase" class="btn btn-primary align-center">Move to next phase</button>&nbsp;&nbsp;
+          <button type="submit" id="generate-winner" class="btn btn-primary align-center">Show winning bid</button>
+          </center>
+    </div>
 
     </div>
+      <br><br>
+    </div>
   </div>
+
+  <h2 class="subs-title text-center" id="please-wait" hidden>Please wait for the transaction to be mined and executed!</h2>
+
   
   <script src="js/dist/jquery.min.js"></script>
   <script src="js/dist/bootstrap.min.js"></script>
