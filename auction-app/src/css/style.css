@@ -33,7 +33,7 @@ table {
 ***********************************/
 .content
 {
-	margin-top: 50px;
+	margin-top: 0px;
 	color: #fff;
 }
 .logo img
@@ -46,11 +46,7 @@ table {
 	font-size: 34px;
     padding-top: 40px;
 }
-#info-section {
-    text-align: center;
-    margin:  110px 0px 69px;
-    min-height: 104px;
-}
+
 #info-section > div {
     margin: 0px 1%;
     display: inline-block;

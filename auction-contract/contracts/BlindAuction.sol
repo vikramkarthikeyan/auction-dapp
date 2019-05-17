@@ -45,7 +45,7 @@ contract BlindAuction {
     function goToNextPhase() public isBeneficiary {
         // If already in done phase, reset to bidding phase
         if (currentPhase == Phase.Done) {
-            currentPhase = Phase.Bidding;
+            currentPhase = Phase.Init;
         } else {
         // Else, increment the phase
         // Conversion to uint needed as enums are internally uints

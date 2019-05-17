@@ -19,7 +19,7 @@ App = {
     }
     web3 = new Web3(App.web3Provider);
 
-    ethereum.enable();
+    // ethereum.enable();
 
     App.populateAddress();
     return App.initContract();
