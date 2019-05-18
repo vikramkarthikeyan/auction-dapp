@@ -1,123 +1,92 @@
-App = {
-  web3Provider: null,
-  contracts: {},
-  names: new Array(),
-  url: 'http://127.0.0.1:7545',
-  chairPerson:null,
-  currentAccount:null,
-  init: function() {
-    return App.initWeb3();
-  },
 
-  initWeb3: function() {
-        // Is there is an injected web3 instance?
-    if (typeof web3 !== 'undefined') {
-      App.web3Provider = web3.currentProvider;
-    } else {
-      // If no injected web3 instance is detected, fallback to the TestRPC
-      App.web3Provider = new Web3.providers.HttpProvider(App.url);
-    }
-    web3 = new Web3(App.web3Provider);
+let BlockchainURL =  'http://127.0.0.1:7545';
+let biddingContract;
+let biddingPhases = {
+    0: {'msg':'Bidding Not Started','type':'info'},
+    1: {'msg':'Bidding Started','type':'success'},
+    2: {'msg':'Reveal Started','type':'success'},
+    3: {'msg':'Auction Ended','type':'success'}
+}
 
-    // ethereum.enable();
+function initContract() {
+    $.getJSON('BlindAuction.json', function(data) {
+        biddingContract = web3.eth
+                            .contract(JSON.parse(data.metadata).output.abi)
+                            .at(data.networks['5777'].address);
+        getCurrentPhase();
+    });
+}
 
-    App.populateAddress();
-    return App.initContract();
-  },
+function bindEvents() {
+    $('#submit-bid').on('click', function(){handleBid()});
+    $('#change-phase').on('click', function(){handlePhase()});
+    $('#generate-winner').on('click', function(){handleWinner()});
+    $('#submit-reveal').on('click', function(){handleReveal()});
+}
 
-  initContract: function() {
-      $.getJSON('BlindAuction.json', function(data) {
-    // Get the necessary contract artifact file and instantiate it with truffle-contract
-    var voteArtifact = data;
-    App.contracts.vote = TruffleContract(voteArtifact);
+function getCurrentPhase() {
+    biddingContract.currentPhase(function(err, result){
+        showNotification(result.toNumber());
+    });
+}
 
-    // Set the provider for our contract
-    App.contracts.vote.setProvider(App.web3Provider);
-    
-    App.getChairperson();
-    return App.bindEvents();
-  });
-  },
-
-  bindEvents: function() {
-    $(document).on('click', '#submit-bid', App.handleBid);
-    $(document).on('click', '#change-phase', App.handlePhase);
-    $(document).on('click', '#generate-winner', App.handleWinner);
-    $(document).on('click', '#submit-reveal', App.handleReveal);
-
-    //$(document).on('click', '#register', function(){ var ad = $('#enter_address').val(); App.handleRegister(ad); });
-  },
-
-  populateAddress : function(){
-    new Web3(new Web3.providers.HttpProvider(App.url)).eth.getAccounts((err, accounts) => {
-      jQuery.each(accounts,function(i){
-        if(web3.eth.coinbase != accounts[i]){
-          var optionElement = '<option value="'+accounts[i]+'">'+accounts[i]+'</option';
-          jQuery('#enter_address').append(optionElement);  
+var intiEv = false;
+function handlePhase(){
+    biddingContract.goToNextPhase(function(err, result){
+        console.log(err,result);
+        if(initEv == false){
+            initEvents();
+            initEv = true;
         }
-      });
-    });
-  },
+    });     
+}
 
-  getChairperson : function(){
-    App.contracts.vote.deployed().then(function(instance) {
-      return instance;
-    }).then(function(result) {
-      App.chairPerson = result.constructor.currentProvider.selectedAddress.toString();
-      App.currentAccount = web3.eth.coinbase;
-      if(App.chairPerson != App.currentAccount){
-        jQuery('#address_div').css('display','none');
-        jQuery('#register_div').css('display','none');
-      }else{
-        jQuery('#address_div').css('display','block');
-        jQuery('#register_div').css('display','block');
-      }
+function initEvents(){
+    var biddingEvent = biddingContract.BiddingStarted();
+    var revealEvent = biddingContract.RevealStarted();
+    var initEvent = biddingContract.AuctionInit();
+
+    initEvent.watch(function(err,result){
+        console.log(err,result);
+        var showErrNotification = true;
+        if('transactionHash' in result){
+            showErrNotification = false;
+            getCurrentPhase();
+        }
+        setTimeout(function(){
+            if(showErrNotification == true)
+                toastr["error"]("Init Event Error");
+        }, 10000);
     })
-  },
-  
-  handlePhase: function(event){
 
-    var bidInstance;
-    var nextState;
-    var nextStateText;
-    var currentPhase = $("#current-phase").text();
-    if(currentPhase == "Bidding")
-    {
-      nextState = 2;
-      nextStateText = "Reveal";
-    }
-    else if(currentPhase == "Reveal")
-    {
-      nextState = 3;
-      nextStateText = "Done";
-
-    }
-     else if(currentPhase == "Done")
-    {
-      nextState = 1;
-      nextStateText = "Bidding";
-    }
-
-    App.contracts.vote.deployed().then(function(instance) {
-      bidInstance = instance;
-      return bidInstance.changeState(nextState);
-    }).then(function(result, err){
-        if(result){
-            if(parseInt(result.receipt.status) == 1)
-            {
-              alert("State has been changed")
-              $("#current-phase").text(nextStateText);
-            }
-            
-            else
-            alert("State change revert")
-        } else {
-            alert(addr + "State change failed")
-        }   
+    biddingEvent.watch(function(err,result){
+        console.log(err,result);
+        var showErrNotification = true;
+        if('transactionHash' in result){
+            showErrNotification = false;
+            getCurrentPhase();
+        }
+        setTimeout(function(){
+            if(showErrNotification == true)
+                toastr["error"]("Bidding Event Error");
+        }, 10000);
     });
-},
 
-  handleBid: function() {
+    revealEvent.watch(function(err,result){
+        console.log(err,result);
+        var showErrNotification = true;
+        if('transactionHash' in result){
+            showErrNotification = false;
+            getCurrentPhase();
+        }
+        setTimeout(function(){
+            if(showErrNotification == true)
+                toastr["error"]("Reveal Event Error");
+        }, 10000);
+    });
+}
+
+function handleBid() {
     console.log("button clicked");
     event.preventDefault();
     var bidValue = $("#bet-value").val();
@@ -141,9 +110,9 @@ App = {
             }   
         });
     });
-  },
+}
 
-    handleReveal: function() {
+function handleReveal() {
     console.log("button clicked");
     event.preventDefault();
     var bidRevealValue = $("#bet-reveal").val();
@@ -168,13 +137,9 @@ App = {
             }   
         });
     });
-  },
+  }
 
-
-
-
-
-  handleWinner : function() {
+function handleWinner() {
     console.log("To get winner");
     var bidInstance;
     App.contracts.vote.deployed().then(function(instance) {
@@ -188,12 +153,24 @@ App = {
     }).catch(function(err){
       console.log(err.message);
     })
-  }
-};
+}
 
+function showNotification(phase){
+    var currentPhase = biddingPhases[phase];
+    $('#current-phase').text(currentPhase.msg);
+    toastr[currentPhase.type](currentPhase.msg);    
+}
 
 $(function() {
-  $(window).load(function() {
-    App.init();
+    $(window).load(function() {
+        if (typeof web3 !== 'undefined') {
+            web3 = new Web3(web3.currentProvider);
+        } else {
+            web3 = new Web3(new Web3.providers.HttpProvider(BlockchainURL));
+        }
+        toastr.options = {"showDuration": "500"};
+        initContract();
+        bindEvents();
+        
   });
 });

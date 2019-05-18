@@ -35,11 +35,12 @@ contract BlindAuction {
     // Events
     event AuctionEnded(address winner, uint highestBid);
     event BiddingStarted();
-    event RevealStarted ();
+    event RevealStarted();
+    event AuctionInit();
 
     constructor() public {
         beneficiary = msg.sender;
-        goToNextPhase();
+        emit AuctionInit();
     }
 
     function goToNextPhase() public isBeneficiary {
@@ -56,6 +57,7 @@ contract BlindAuction {
         // Emit appropriate events for the new phase
         if (currentPhase == Phase.Reveal) emit RevealStarted();
         if (currentPhase == Phase.Bidding) emit BiddingStarted();
+        if (currentPhase == Phase.Init) emit AuctionInit();
     }
 
     function bid(bytes32 blindBid) public payable validPhase(Phase.Bidding) {

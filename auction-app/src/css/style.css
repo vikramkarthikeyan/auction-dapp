@@ -8,7 +8,10 @@
 body {
 	line-height: 1.2;
     height: 100%;
-    background: #ffffff url('../img/background.jpeg') no-repeat center top;
+    background: linear-gradient(
+        rgba(0, 0, 0, 0.45), 
+        rgba(0, 0, 0, 0.45)
+      ), url('../img/background.jpeg') no-repeat center top;
     background-size: cover;
 	font-family: 'Open Sans', sans-serif;
 }
@@ -348,3 +351,36 @@ body{
       li:active{
         opacity: 0.7;
       }
+
+.content{
+    height: 100vh;
+}
+
+.form-control{
+    display: inline-block;
+    width: 200px;
+    color:#333; 
+    font-size:15px;
+    float: right;
+}
+
+.subs-title{
+    font-size:20px; 
+    text-align:left; 
+    display:inline-block;
+    width: 100%;
+}
+
+.btn-action{
+    display: inline-block;
+    width: 150px;
+}
+
+.btn-control{
+    display: inline-block;
+    width: 200px;
+}
+
+.text-center{
+    text-align: center;
+}
