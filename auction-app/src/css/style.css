@@ -358,7 +358,7 @@ body{
 
 .form-control{
     display: inline-block;
-    width: 200px;
+    width: 250px;
     color:#333; 
     font-size:15px;
     float: right;
@@ -383,4 +383,44 @@ body{
 
 .text-center{
     text-align: center;
+}
+
+#toast-container>div{
+    width: auto;
+    height: 100px;
+    box-shadow: none;
+    opacity: 1;
+}
+
+#toast-container>div:hover{
+    box-shadow: none;
+}
+
+.toast-message{
+    font-size: 20px;
+    letter-spacing: 0.7px;
+    font-weight: 600;
+    margin-top: 22px;
+    margin-left: 15px;
+    margin-right: 25px;
+}
+
+.notification0 {
+    background-color: #1b75bb;
+}
+
+.notification1 {
+    background-color: #f39c11;
+}
+
+.notification2 {
+    background-color: #d25400;
+}
+
+.notification3 {
+    background-color: #17a086;
+}
+
+.toast-error{
+    background-color: #c1392d;
 }
