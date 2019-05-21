@@ -6,10 +6,10 @@ App = {
     chairPerson:null,
     currentAccount:null,
     biddingPhases: {
-        0: 'Bidding Not Started',
-        1: 'Bidding Started',
-        2: 'Reveal Started',
-        3: 'Auction Ended'
+        "AuctionInit": {'id':0, 'text':"Bidding Not Started"},
+        "BiddingStarted": {'id':1, 'text':"Bidding Started"},
+        "RevealStarted": {'id':2, 'text':"Reveal Started"},
+        "AuctionEnded": {'id':3, 'text':"Auction Ended"}
     },
 
     init: function() {
@@ -42,7 +42,6 @@ App = {
             App.contracts.vote.setProvider(App.web3Provider);
             
             App.getChairperson();
-            App.getCurrentPhase();
             return App.bindEvents();
         });
     },
@@ -85,13 +84,18 @@ App = {
     
     handlePhase: function(event){
       App.contracts.vote.deployed().then(function(instance){
-        return instance.goToNextPhase();
+        return instance.advancePhase();
       })
       .then(function(result){
         console.log(result);
         if(result){
             if(parseInt(result.receipt.status) == 1){
-                App.getCurrentPhase();
+                if(result.logs.length > 0){
+                  App.showNotification(result.logs[0].event);
+                }
+                else{
+                  App.showNotification("AuctionEnded");
+                }
                 return;
             }
             else{
@@ -180,23 +184,11 @@ App = {
       })
     },
 
-    //Function to get the current phase of the auction
-    getCurrentPhase: function() {
-        App.contracts.vote.deployed().then(function(instance){
-            return instance.currentPhase.call();
-        })
-        .then(function(result){
-            console.log(result.toNumber());
-            App.showNotification(result.toNumber());
-        })
-    },
-
     //Function to show the notification of auction phases
     showNotification: function(phase){
-        var currentPhase = App.biddingPhases[phase];
-        $('#current-phase').text(currentPhase);
-        console.log(currentPhase,'notification'+String(phase));
-        toastr.info(currentPhase, "", {"iconClass": 'toast-info notification'+String(phase)});
+        var notificationText = App.biddingPhases[phase];
+        $('#phase-notification-text').text(notificationText.text);
+        toastr.info(notificationText.text, "", {"iconClass": 'toast-info notification'+String(notificationText.id)});
     }
   };
   
