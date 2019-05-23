@@ -8,11 +8,8 @@
 body {
 	line-height: 1.2;
     height: 100%;
-    background: linear-gradient(
-        rgba(0, 0, 0, 0.45), 
-        rgba(0, 0, 0, 0.45)
-      ), url('../img/background.jpeg') no-repeat center top;
-    background-size: cover;
+    background-color: #ebeff2;
+    color: #333 !important;
 	font-family: 'Open Sans', sans-serif;
 }
 ol, ul {
@@ -37,7 +34,7 @@ table {
 .content
 {
 	margin-top: 0px;
-	color: #fff;
+	/* color: #fff; */
 }
 .logo img
 {

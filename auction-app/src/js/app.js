@@ -175,6 +175,7 @@ App = {
         bidInstance = instance;
         return bidInstance.auctionEnd();
       }).then(function(res){
+        console.log(res);
         var winner = res.logs[0].args.winner;
         var highestBid = res.logs[0].args.highestBid.c[0];
         toastr.info("Highest bid is " + highestBid + "<br>" + "Winner is " + winner, "", {"iconClass": 'toast-info notification3'});
