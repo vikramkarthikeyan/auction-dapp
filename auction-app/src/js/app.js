@@ -177,7 +177,7 @@ App = {
       }).then(function(res){
         console.log(res);
         var winner = res.logs[0].args.winner;
-        var highestBid = res.logs[0].args.highestBid.c[0];
+        var highestBid = res.logs[0].args.highestBid.toNumber();
         toastr.info("Highest bid is " + highestBid + "<br>" + "Winner is " + winner, "", {"iconClass": 'toast-info notification3'});
       }).catch(function(err){
         console.log(err.message);
